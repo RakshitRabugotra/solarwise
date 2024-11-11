@@ -1,5 +1,7 @@
 import netCDF4 as nc
 import numpy as np
+import pickle
+import datetime
 import csv
 import os
 
@@ -21,6 +23,20 @@ def get_solar_decline(filename: str = "delta_table.csv"):
     with open(os.path.join(STATIC_FOLDER, "csv", filename), mode="r") as rFile:
         reader = csv.DictReader(rFile, delimiter=",")
         return [line for line in reader]
+
+
+def get_model_files():
+    files = []
+    path = os.path.join(STATIC_FOLDER, "models")
+
+    for filename in os.listdir(path):
+        files.append(os.path.join(path, filename))
+    return files
+
+
+def fetch_model(file):
+    model = pickle.load(open(os.path.join(STATIC_FOLDER, "models", file), "rb"))
+    return model
 
 
 class NetCDFRetriever:

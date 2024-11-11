@@ -1,10 +1,11 @@
 from flask import Blueprint, request
 
 # Custom modules
-from app.lib.dataset import NetCDFExtractor, NetCDFRetriever
+# from app.lib.dataset import NetCDFExtractor, NetCDFRetriever
 from app.lib.energy import get_estimated_energy
 from app.utils.validators import get_or_none
-from app.utils.dates import get_current_year
+# from app.utils.dates import get_current_year
+from app.utils.sdl_predictor import calculate_SDL
 
 # Custom Responses
 from app.utils.responses import APIBaseException, BadRequestException, Success
@@ -23,31 +24,22 @@ def get_sdlr():
     json = request.get_json()
 
     # Get the required values
-    year = get_or_none(json, "year", default=get_current_year())
+    date = get_or_none(json, "date")
     lat = get_or_none(json, "lat")
     lon = get_or_none(json, "lon")
 
-    # Run through the extractor
-    retriever = NetCDFRetriever()
-
-    files = None
-    try:
-        # get the files, !throws exception
-        files = retriever.retrieve(year)
-    except Exception as e:
-        return BadRequestException(msg=str(e)).response
-
-    # Get the date for the files
-    sdlr_data = None
-    try:
-        sdlr_data = NetCDFExtractor.get_sdlr(files, lat, lon)
-    except Exception as e:
-        return APIBaseException(
-            msg="Internal Server error", code=500, payload={"error": str(e)}
+    # Validate the input
+    if date is None or lat is None or lon is None:
+        return BadRequestException(
+            msg="Invalid date format", payload={"date": date}
         ).response
 
+   
+    sdlr_data = calculate_SDL(lat, lon, date)
+    
     return Success(
-        msg="found SDLR data", payload={"year": year, "sdlr": sdlr_data}
+        msg="found SDLR data", 
+        payload={"sdlr": sdlr_data}
     ).response
 
 

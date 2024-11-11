@@ -171,6 +171,7 @@ def get_estimated_energy(
     area: float,
     efficiency: float | None = 0.223,
     month: int | None = None,
+    year: int | None = None,
 ) -> float | None:
     """
     Estimate the energy output of a solar panel system for a given location and month.
@@ -196,27 +197,35 @@ def get_estimated_energy(
       and a class `NetCDFExtractor` to extract solar radiation data.
     - The sunlight hours are adjusted with an empirical factor of 0.6 to account for peak hours.
     """
-    year = datetime.datetime.now().year - 1
+    current_year = datetime.datetime.now().year
+    year = year or current_year + 1
+
     # Redefine efficiency with a constants
     efficiency = efficiency or 0.223
     # Round the month for inputs
     month = month % 12 if month is not None else None
 
-    # Retrieve for the last year
-    files = None
-    try:
-        retriever = NetCDFRetriever()
-        files = retriever.retrieve(year)
-    except ValueError:
-        print("The data is not up-to-date, for year:", year)
-        return None
+    SDLR = []
+    if(year < current_year):
+        # Retrieve for the last year
+        files = None
+        try:
+            retriever = NetCDFRetriever()
+            files = retriever.retrieve(year)
+        except ValueError:
+            print("The data is not up-to-date, for year:", year)
+            return None
 
-    # If the files aren't found, return None
-    if files is None:
-        return None
+        # If the files aren't found, return None
+        if files is None:
+            return None
 
-    # Extract the SDLR data
-    SDLR = list(map(lambda dt: dt["sdlr"], NetCDFExtractor.get_sdlr(files, lat, lon)))
+        # Extract the SDLR data
+        SDLR = list(map(lambda dt: dt["sdlr"], NetCDFExtractor.get_sdlr(files, lat, lon)))
+    else:
+        # Retrieve for the all year
+        pass
+        
 
     total = 0
     # Return the energy for a particular month
@@ -276,7 +285,7 @@ if __name__ == "__main__":
     # Convert the W/m^ to kWh based on the hours from sunlight
     radiation = 364.5896911621094  # in W/m^2
 
-    area = 10  # in square metres, rought estimate
+    area = 10  # in square metres, rough estimate
     # Getting the hours estimation, and we'll use the peak hours
     hours = get_sunlight_hours(lat, 29, "OCT")
 
