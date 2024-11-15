@@ -18,8 +18,6 @@ def find_closest_point(locations, latitude, longitude):
     min_distance = float("inf")
     closest_point = None
 
-    print("lat: ", latitude, "lon: ", longitude, "locations: ", locations)
-
     for x, y in locations:
         distance = (x - latitude) ** 2 + (y - longitude) ** 2
         if distance < min_distance**2:
