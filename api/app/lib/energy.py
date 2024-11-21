@@ -3,6 +3,7 @@ import math
 
 # Custom modules
 from app.utils.dates import date_range, get_month_abbr
+from .future import calculate_SDL
 from .dataset import NetCDFRetriever, NetCDFExtractor, get_solar_decline
 
 # The solar decline dataset
@@ -165,12 +166,12 @@ def calculate_omegao(delta: float, phi: float):
     return omegao
 
 
-def get_estimated_energy(
+def get_estimated_energy_by_year(
     lat: float,
     lon: float,
     area: float,
+    to_year: int,
     efficiency: float | None = 0.223,
-    month: int | None = None,
 ) -> float | None:
     """
     Estimate the energy output of a solar panel system for a given location and month.
@@ -179,10 +180,9 @@ def get_estimated_energy(
     - lat (float): Latitude of the location (in decimal degrees).
     - lon (float): Longitude of the location (in decimal degrees).
     - area (float): Area of the solar panels (in square meters).
+    - to_year (int | None): The year up until which the prediction is needed
     - panel_efficiency (float): Efficiency of the solar panels (between 0 and 1).
       If None, defaults to 0.223 (22.3%).
-    - month (int | None): The month for which to estimate energy (1 for January, ..., 12 for December).
-      If None, returns the average energy output for the whole year.
 
     Returns:
     - float | None: Estimated energy output in kWh for the specified month or average yearly output.
@@ -196,65 +196,52 @@ def get_estimated_energy(
       and a class `NetCDFExtractor` to extract solar radiation data.
     - The sunlight hours are adjusted with an empirical factor of 0.6 to account for peak hours.
     """
-    year = datetime.datetime.now().year - 1
+    current_year = datetime.datetime.now().year
+    to_year = to_year or current_year + 1
+
     # Redefine efficiency with a constants
     efficiency = efficiency or 0.223
-    # Round the month for inputs
-    month = month % 12 if month is not None else None
+    SDLR = []
 
-    # Retrieve for the last year
-    files = None
-    try:
-        retriever = NetCDFRetriever()
-        files = retriever.retrieve(year)
-    except ValueError:
-        print("The data is not up-to-date, for year:", year)
-        return None
-
-    # If the files aren't found, return None
-    if files is None:
-        return None
-
-    # Extract the SDLR data
-    SDLR = list(map(lambda dt: dt["sdlr"], NetCDFExtractor.get_sdlr(files, lat, lon)))
-
-    total = 0
-    # Return the energy for a particular month
-    if month is not None:
-        # Average sunlight received for the particular month
-        hours = get_sunlight_hours(lat, -1, get_month_abbr(month))
-        # Adjustment factor for sunlight, accounting for peak hours
-        adjustment_factor = 0.6
-        hours *= adjustment_factor
-        # The SDLR for the particular month
-        radiation = SDLR[month - 1]
-        # Energy output for the scenario (in kWh) (in a single day)
-        energy = (radiation * area * hours) / 1000
-        # Account for the efficiency of the panel
-        energy *= efficiency
-        total = energy
-        return {"order": 0, "month": get_month_abbr(month), "energy": energy}, total
+    # Retrieve for the all year
+    date = datetime.datetime(to_year, 12, 31).strftime("%Y-%m-%d")
+    # Get the prediction for the SDLR
+    SDLR.extend(calculate_SDL(lat, lon, date))
 
     # Else, return an average energy for the whole year
-    month_energies = []
-    for i in range(1, 13):  # Corrected to loop through all months (1 to 12)
+    yearly_energies = []
+
+    # The starting date for the prediction
+    date = datetime.datetime(2024, 9, 1)  # Start month + 1
+
+    total = 0
+    for i, radiation in enumerate(SDLR):
         # Average sunlight received for the particular month
-        hours = get_sunlight_hours(lat, -1, get_month_abbr(i))
+        hours = get_sunlight_hours(lat, -1, get_month_abbr(date.month - 1))
         # Adjustment factor for sunlight, accounting for peak hours
         adjustment_factor = 0.6
         hours *= adjustment_factor
         # The SDLR radiation for this month
-        radiation = SDLR[i - 1]
         energy = (radiation * area * hours) / 1000
-        energy *= efficiency * date_range(i, year)
-        month_energies.append(energy)
+        energy *= efficiency * date_range(date.month, date.year)
+        yearly_energies.append(
+            {
+                "radiation": radiation,
+                "order": i,
+                "year": date.year,
+                "month": get_month_abbr(date.month - 1),
+                "energy": energy,
+                "peak-sunlight-hours": hours * 0.6,
+            }
+        )
+        # Increment the date
+        date += datetime.timedelta(days=date_range(date.month, date.year))
 
     # Return an average, adjusted for efficiency
-    for i, energy in enumerate(month_energies):
-        month_energies[i] = {"order": i, "month": get_month_abbr(i), "energy": energy}
-        total += energy
+    for i, object in enumerate(yearly_energies):
+        total += object["energy"]
 
-    return month_energies, total
+    return yearly_energies, total
 
 
 if __name__ == "__main__":
@@ -276,7 +263,7 @@ if __name__ == "__main__":
     # Convert the W/m^ to kWh based on the hours from sunlight
     radiation = 364.5896911621094  # in W/m^2
 
-    area = 10  # in square metres, rought estimate
+    area = 10  # in square metres, rough estimate
     # Getting the hours estimation, and we'll use the peak hours
     hours = get_sunlight_hours(lat, 29, "OCT")
 
