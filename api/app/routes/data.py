@@ -93,7 +93,7 @@ def get_energy_prediction():
         ).response
 
     try:
-        energies_by_month, total_energy = get_estimated_energy_by_year(
+        energies_by_month, total_energy, green = get_estimated_energy_by_year(
             lat, lon, area, to_year, efficiency
         )
     except Exception as e:
@@ -103,7 +103,11 @@ def get_energy_prediction():
 
     return Success(
         msg="energy for the year",
-        payload={"months": energies_by_month, "total": total_energy},
+        payload={
+            "months": energies_by_month,
+            "total": total_energy,
+            "greenFactor": green,
+        },
     ).response
 
 
@@ -174,7 +178,7 @@ def get_breakeven_point():
     def time_function(year: int):
         year = math.ceil(year)
         # Get the estimated energy for the future year
-        _, total_energy_kwh = get_estimated_energy_by_year(
+        a, total_energy_kwh, c = get_estimated_energy_by_year(
             lat, lon, area, to_year=start_year + year, efficiency=efficiency
         )
 
@@ -199,7 +203,7 @@ def get_breakeven_point():
     # Return the break_even point and the data associated with it in progression
     # Generate the report for all the months till the break even year
     to_year = start_year + break_even
-    energies_by_month, total = get_estimated_energy_by_year(
+    energies_by_month, total, _ = get_estimated_energy_by_year(
         lat, lon, area, to_year, efficiency
     )
 
@@ -218,6 +222,10 @@ def get_breakeven_point():
         payload={
             "years": grouped_by_year,
             "total": total,
+            "energyInCost": {
+                "formatted": format_currency(total * cost_to_unit),
+                "amount": total,
+            },
             "adjustedCostToInstallation": {
                 "formatted": format_currency(final_installation_amount),
                 "amount": final_installation_amount,
