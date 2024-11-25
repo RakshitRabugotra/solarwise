@@ -241,7 +241,32 @@ def get_estimated_energy_by_year(
     for i, object in enumerate(yearly_energies):
         total += object["energy"]
 
-    return yearly_energies, total
+    return yearly_energies, total, calculate_co2_emissions(total)
+
+
+def calculate_co2_emissions(kwh):
+    """
+    Calculate CO2 emissions based on electricity consumption and emission factor.
+
+    Parameters:
+    kwh (float): Electricity consumption in kilowatt-hours.
+
+    Returns:
+    float: Total CO2 emissions in kilograms.
+    """
+    emission_factor = 0.475
+    co2_absorption_per_tree = 21
+    co2_emissions = kwh * emission_factor
+    trees_saved = co2_emissions / co2_absorption_per_tree
+
+    return {
+        "trees": trees_saved,
+        "carbonEmission": {"co2Emissions": {"amount": co2_emissions, "unit": "kgs"}},
+        "factors": {
+            "carbonAbsorption": co2_absorption_per_tree,
+            "emissionFactor": {"amount": emission_factor, "unit": "CO2/kWh"},
+        },
+    }
 
 
 if __name__ == "__main__":
