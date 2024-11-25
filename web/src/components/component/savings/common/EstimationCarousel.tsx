@@ -1,68 +1,67 @@
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+"use client"
 
-import { EnergyEstimation } from "@/types"
+import { useMemo } from "react"
+import { twMerge } from "tailwind-merge"
+// UI
 import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import NumberedChart, {
+  NumberedChartData,
+  NumberedChartProps,
+} from "../../charts/NumberedChart"
+import { EnergyEstimation } from "@/types"
 
 export interface EstimationCarouselProps {
-  production: EnergyEstimation | null
+  data: EnergyEstimation | null
+  graphConfig: NumberedChartProps["config"]
+  classNames?: {
+    carouselContainer?: string
+  }
 }
 
 export default function EstimationCarousel({
-  production,
+  data,
+  graphConfig,
+  classNames,
 }: EstimationCarouselProps) {
-  if (!production) return null
-
-  return (
-    <section className="flex h-screen basis-full flex-col self-end px-4 py-[10vh] sm:flex-row sm:justify-between sm:px-6">
-      <div className="basis-full sm:basis-1/2">
-        <h2>Your savings:</h2>
-        <p></p>
-      </div>
-
-      <div className="basis-full sm:basis-1/2">
-        <ChartContainer
-          config={{
-            energy: {
-              label: "Energy",
-            },
-          }}
-        >
-          <BarChart accessibilityLayer data={production.months}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={value => value.slice(0, 3)}
-            />
-            <Bar
-              dataKey="energy"
-              fill="rgb(58, 181, 46)"
-              gradientTransform=""
-              radius={4}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
-          </BarChart>
-        </ChartContainer>
-      </div>
-    </section>
+  // Get the data to show from the energy production
+  const formattedData = useMemo(
+    () =>
+      data === null
+        ? []
+        : (data.months.map(({ energy, month, year }) => ({
+            label: month + "-" + year,
+            value: energy,
+          })) as NumberedChartData),
+    [data]
   )
-}
 
-const Card: React.FC<EnergyEstimation["months"][0]> = ({
-  energy,
-  order,
-  month,
-}) => {
+  // Decides the total number of slides
+  const numSlices = useMemo(() => formattedData.length / 12, [formattedData])
+
+  if (!data) return null
+
   return (
-    <div className="flex aspect-square grow basis-[8%] flex-col items-center justify-center rounded-[50%] bg-green-700 text-white">
-      <p>{month}</p>
-      <h4>{energy.toFixed(0)}</h4>
-    </div>
+    <Carousel className={twMerge("w-full max-w-4xl mx-auto", classNames?.carouselContainer)}>
+      <CarouselContent>
+        {Array.from({ length: numSlices }).map((_, index) => (
+          <CarouselItem key={index}>
+            <div className="p-1">
+              <NumberedChart
+                data={formattedData.slice(index * 12, (index + 1) * 12)}
+                config={graphConfig}
+              />
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   )
 }

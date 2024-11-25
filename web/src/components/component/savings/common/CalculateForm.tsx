@@ -26,7 +26,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { calculateFormSchema } from "@/schema/schema"
 import { calculateAction } from "@/actions/actions"
-import { EnergyEstimation } from "@/types"
+import { BaseAPIRequestBody, EnergyEstimation } from "@/types"
+import { setConfig } from "next/config"
+import * as CONFIG from "@/lib/constants"
 
 type FormErrors = {
   roofArea?: string[]
@@ -36,9 +38,9 @@ type FormErrors = {
 }
 
 export default function CalculateForm({
-  setProduction,
+  setConfig,
 }: {
-  setProduction: React.Dispatch<React.SetStateAction<EnergyEstimation | null>>
+  setConfig: React.Dispatch<React.SetStateAction<BaseAPIRequestBody | null>>
 }) {
   // Get the position of the user stored from the local-storage
   const storedLocation = JSON.parse(
@@ -65,15 +67,20 @@ export default function CalculateForm({
       setErrors(fieldErrors)
       return
     }
-
     setErrors({})
 
-    calculateAction({
+    // Set the config body
+    setConfig(_prev => ({
       area: Number(result.data.roofArea),
       technology: result.data.pvTechnology,
+      efficiency: 0.223,
       lat: position[0],
       lon: position[1],
-    }).then(result => setProduction(result ? result.payload : null))
+      to_year: CONFIG.PREDICTION_TO_YEAR,
+      costToUnit: CONFIG.COST_TO_UNIT,
+      costToInstallation: CONFIG.COST_TO_INSTALLATION,
+      adjustInflation: CONFIG.ADJUST_FOR_INSTALLATION,
+    }))
   }
 
   return (
@@ -114,7 +121,7 @@ export default function CalculateForm({
               <p className="text-sm text-red-500">{errors.pvTechnology}</p>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="azimuth">
                 <TooltipProvider>
@@ -177,7 +184,7 @@ export default function CalculateForm({
                 <p className="text-sm text-red-500">{errors.mountingSlope}</p>
               )}
             </div>
-          </div>
+          </div> */}
           <Button type="submit" className="w-full">
             Calculate
           </Button>
@@ -186,7 +193,6 @@ export default function CalculateForm({
     </Card>
   )
 }
-
 
 function InfoIcon(props: any) {
   return (
@@ -208,4 +214,3 @@ function InfoIcon(props: any) {
     </svg>
   )
 }
-
