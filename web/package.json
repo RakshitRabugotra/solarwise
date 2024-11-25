@@ -21,6 +21,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "embla-carousel-react": "^8.5.1",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^4.0.0",
     "lucide-react": "^0.438.0",
