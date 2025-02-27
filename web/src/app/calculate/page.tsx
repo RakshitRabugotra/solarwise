@@ -15,7 +15,10 @@ import * as CONFIG from "@/lib/constants"
 import { calculateAction, calculateBreakEven } from "@/actions/actions"
 
 export default function Calculator() {
-  const [isLoading, setLoading] = useState(false)
+  const [formStatus, setFormStatus] = useState<
+    "loading" | "unset" | "completed"
+  >("unset")
+
   const [isBreakLoading, setBreakLoading] = useState(false)
   const [config, setConfig] = useState<BaseAPIRequestBody | null>(null)
 
@@ -37,25 +40,27 @@ export default function Calculator() {
 
   // fire to api results for the prediction
   useEffect(() => {
+    if(!config) return setFormStatus('unset')
     const fetchPrediction = async () => {
-      setLoading(true)
+      setFormStatus("loading")
       if (!config) {
-        setLoading(false)
+        setFormStatus("completed")
         return
       }
       const { response, error } = await calculateAction(config)
       if (!response || error) {
-        setLoading(false)
+        setFormStatus("completed")
         return
       }
       setPredictionData(response.payload)
-      setLoading(false)
+      setFormStatus("completed")
     }
     fetchPrediction()
   }, [config])
 
   // fire to api to get the results for the break even
   useEffect(() => {
+    if(!config) return setFormStatus('unset')
     const fetchBreakEven = async () => {
       setBreakLoading(true)
       if (!config) {
@@ -75,22 +80,24 @@ export default function Calculator() {
 
   return (
     // bg-gray-300
-    <section className="min-h-screen">
+    <section className="min-h-screen bg-muted">
       {/* bg-white */}
-      <section className="flex h-[80vh] w-full flex-row items-center justify-around gap-10 md:px-10">
+      <section className="flex h-screen w-full flex-col md:flex-row md:items-center md:justify-between">
         <Map />
-        <CalculateForm
-          setConfig={setConfig}
-          // scrollTrigger={scrollToSavings}
-        />
+        <div className="w-full basis-full md:basis-1/3 md:px-10">
+          <CalculateForm
+            setConfig={setConfig}
+            // scrollTrigger={scrollToSavings}
+          />
+        </div>
       </section>
 
       {/* bg-white */}
 
-      <section className="bg-white">
+      {formStatus !== "unset" && (
         <section className="bg-white">
-          {/* The energy production in the given month */}
-          {isLoading ? (
+          The energy production in the given month
+          {formStatus === "loading" ? (
             loader
           ) : (
             <>
@@ -115,7 +122,6 @@ export default function Calculator() {
               </section>{" "}
             </>
           )}
-
           {isBreakLoading ? (
             loader
           ) : (
@@ -129,7 +135,7 @@ export default function Calculator() {
             </section>
           )}
         </section>
-      </section>
+      )}
     </section>
   )
 }
@@ -213,10 +219,9 @@ function BreakEvenPoint({
       <h1 className="py-6 text-4xl">
         The panel pays itself off in{" "}
         <span className={variableSpaceClass}>
-          {!xYears ? "- years" : xYears + ' years'}
+          {!xYears ? "- years" : xYears + " years"}
         </span>
-
-        <p className="text-lg my-4">{`Assuming the cost per kWh energy is: ${breakEven ? breakEven.adjustedCostToUnit.formatted : '-'}`}</p>
+        <p className="my-4 text-lg">{`Assuming the cost per kWh energy is: ${breakEven ? breakEven.adjustedCostToUnit.formatted : "-"}`}</p>
       </h1>
       <section className="flex max-w-xl flex-col gap-8 p-6 md:flex-row">
         <div className="flex basis-full flex-col items-center justify-center rounded-sm border-4 border-green-600 bg-[#ccf8ce]/50 p-4">

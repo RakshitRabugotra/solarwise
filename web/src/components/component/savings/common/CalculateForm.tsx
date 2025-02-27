@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import {
   Card,
   CardHeader,
@@ -47,7 +47,7 @@ export default function CalculateForm({
     localStorage.getItem("user-location") || "null"
   )
 
-  const [position, setPosition] = useState<[number, number]>([
+  const { current: position } = useRef<[number, number]>([
     storedLocation.y,
     storedLocation.x,
   ])
@@ -84,17 +84,17 @@ export default function CalculateForm({
   }
 
   return (
-    <Card className="max-w-md grow basis-1/2">
+    <Card className="lg:max-w-md rounded-none lg:rounded-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Solar Savings Calculator</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-lg md:text-xl lg:text-2xl">Little more?</CardTitle>
+        <CardDescription className="text-sm md:text-base">
           Discover how much you can save by installing solar panels.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form action={clientAction} className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="roofArea">Roof Area</Label>
+            <Label htmlFor="roofArea" className="text-xs sm:text-sm">Roof Area</Label>
             <Input
               id="roofArea"
               name="roofArea"
@@ -106,7 +106,7 @@ export default function CalculateForm({
             )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="pvTechnology">PV Technology</Label>
+            <Label htmlFor="pvTechnology" className="text-xs sm:text-sm">PV Technology</Label>
             <Select name="pvTechnology">
               <SelectTrigger>
                 <SelectValue placeholder="Select PV technology" />
