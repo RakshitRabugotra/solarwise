@@ -1,3 +1,4 @@
+import Strings from "@/constants/Strings"
 import dynamic from "next/dynamic"
 
 // Do a dynamic import to avoid (location is undefined) error
@@ -8,11 +9,11 @@ const LocationForm = dynamic(
 
 export default function Home() {
   return (
-    <div className="flex h-[70vh] w-full flex-col items-center justify-center bg-slate-200 px-4">
-      <h2 className="black my-10 text-5xl font-extrabold md:text-7xl">
-        Solarwise
+    <main className="container mx-auto flex h-screen w-full flex-col bg-muted bg-slate-200 pt-[18vh]">
+      <h2 className="black my-10 text-center text-5xl font-extrabold md:text-7xl">
+        {Strings.APP.SHORT_TITLE}
       </h2>
       <LocationForm />
-    </div>
+    </main>
   )
 }

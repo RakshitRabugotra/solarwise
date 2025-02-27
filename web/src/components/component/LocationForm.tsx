@@ -7,6 +7,10 @@ import { Button } from "../ui/button"
 import { SearchResult } from "leaflet-geosearch/dist/providers/provider.js"
 import { useRouter } from "next/navigation"
 import "@/components/ui/form"
+import { ArrowRight } from "lucide-react"
+import Strings from "@/constants/Strings"
+import { cn } from "@/lib/utils"
+import Maps from "@/constants/Maps"
 
 export default function LocationForm() {
   const [input, setInput] = useState("")
@@ -71,7 +75,12 @@ export default function LocationForm() {
   }
 
   const handleSubmit = (index: number) => {
-    const selectedLocation = results[index >= 0 ? index : 0] // Pick the top result if nothing is selected
+    // -1 for the case when using default location
+    const selectedLocation = index === -1 ? {
+      y: Maps.STARTING_COORDS.lat,
+      x: Maps.STARTING_COORDS.lon,
+    } : results[index >= 0 ? index : 0] // Pick the top result if nothing is selected
+
     if (selectedLocation) {
       console.log("Submitted Location:", selectedLocation)
       localStorage.setItem("user-location", JSON.stringify(selectedLocation))
@@ -80,42 +89,51 @@ export default function LocationForm() {
   }
 
   return (
-    <div className="flex h-[70vh] w-full flex-col items-center bg-slate-200">
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          handleSubmit(selectedIndex)
-        }}
-      >
-        <div className="mb-2 flex items-center justify-center">
-          <input
-            type="text"
-            onChange={e => debouncedSetInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Search location"
-            className="h-full p-2 pl-4"
-          />
-          <Button type="submit" className="rounded-none">
-            Check Your Roof
-          </Button>
-        </div>
-        <ul className="md:max-w-1/2 max-h-[200px] w-full overflow-y-auto rounded border border-gray-300 bg-white shadow-lg md:mx-auto">
-          {results.map((result: SearchResult, index: number) => (
-            <li
-              key={index}
-              ref={el => {
-                resultRefs.current[index] = el
-              }}
-              onClick={() => handleSelectResult(index)}
-              className={`cursor-pointer border-b p-2 last:border-none hover:bg-gray-100 ${
-                selectedIndex === index ? "bg-gray-200" : ""
-              }`}
-            >
-              {result.label}
-            </li>
-          ))}
-        </ul>
-      </form>
-    </div>
+    <form
+      onSubmit={e => {
+        e.preventDefault()
+        handleSubmit(selectedIndex)
+      }}
+      className="flex w-full flex-col items-center justify-center bg-slate-200 max-w-screen-sm mx-auto"
+    >
+      <div className="flex w-screen max-w-screen-sm items-center justify-center p-3">
+        <input
+          type="text"
+          onChange={e => debouncedSetInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={Strings.ADDRESS_BAR_PLACEHOLDER}
+          className="h-full w-full p-3 text-sm sm:text-base rounded-sm shadow-md border-2 border-muted"
+        />
+        {/* <Button
+          type="submit"
+          size={"sm"}
+          className="-mr-3 rounded-none border-none bg-transparent shadow-none hover:bg-transparent"
+        >
+          <span className="hidden bg-black p-2 sm:inline-block sm:text-base">
+            {Strings.ADDRESS_BAR_SUBMIT_TEXT}
+          </span>
+          <span className="rounded-full bg-black p-2 sm:hidden">
+            <ArrowRight size={16} />
+          </span>
+        </Button> */}
+      </div>
+      <ul className={cn("w-full overflow-y-auto rounded bg-white shadow-lg p-3 max-h-[25vh]", results?.length === 0 && "hidden")}>
+        {results.map((result: SearchResult, index: number) => (
+          <li
+            key={index}
+            ref={el => {
+              resultRefs.current[index] = el
+            }}
+            onClick={() => handleSelectResult(index)}
+            className={`cursor-pointer border-b p-2 last:border-none hover:bg-gray-100 ${
+              selectedIndex === index ? "bg-gray-200" : ""
+            }`}
+          >
+            {result.label}
+          </li>
+        ))}
+      </ul>
+      <button className='text-muted-foreground underline text-lg py-8' onClick={() => handleSubmit(-1)}>Or, drop a pin on the map?</button>
+    </form>
   )
 }

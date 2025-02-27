@@ -165,6 +165,7 @@ function CO2Emissions({ data }: Props) {
           {greenFactor.carbonEmission.co2Emissions.amount.toFixed(2) +
             " " +
             greenFactor.carbonEmission.co2Emissions.unit}
+          &nbsp;of CO<sub>2</sub>
         </span>
       </h1>
       <p className="my-6 text-7xl font-medium">
@@ -212,8 +213,10 @@ function BreakEvenPoint({
       <h1 className="py-6 text-4xl">
         The panel pays itself off in{" "}
         <span className={variableSpaceClass}>
-          {!xYears ? "- years" : xYears}
+          {!xYears ? "- years" : xYears + ' years'}
         </span>
+
+        <p className="text-lg my-4">{`Assuming the cost per kWh energy is: ${breakEven ? breakEven.adjustedCostToUnit.formatted : '-'}`}</p>
       </h1>
       <section className="flex max-w-xl flex-col gap-8 p-6 md:flex-row">
         <div className="flex basis-full flex-col items-center justify-center rounded-sm border-4 border-green-600 bg-[#ccf8ce]/50 p-4">

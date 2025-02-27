@@ -116,8 +116,6 @@ export default function Map() {
     return null
   }
 
-  console.log("User location: ", position)
-
   return (
     <div className="relative basis-1/2">
       <MapContainer center={position} zoom={15} scrollWheelZoom={false}>
