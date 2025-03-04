@@ -33,6 +33,7 @@
     "react-leaflet": "^4.2.1",
     "react-select": "^5.8.0",
     "recharts": "^2.13.3",
+    "swiper": "^11.2.5",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.0",

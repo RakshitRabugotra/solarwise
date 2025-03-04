@@ -7,7 +7,7 @@ const Newsletter = ({ className }:{className?: string}) => {
   const [email, setEmail] = useState("")
 
   return (
-    <div className={twMerge("flex flex-col items-end justify-center grow py-5 px-12", className)}>
+    <div className={twMerge("flex flex-col items-end justify-center grow py-5 md:px-12 p-8", className)}>
       <h1 className='text-white text-2xl sm:text-4xl font-light font-roboto'>Subscribe to our Newsletter</h1>
       <fieldset className="flex flex-row items-stretch w-full mt-4">
         <input

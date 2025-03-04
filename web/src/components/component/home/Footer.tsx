@@ -7,16 +7,8 @@ export default function Footer() {
       {/* The upper section */}
       <section className="mb-10 flex flex-col overflow-hidden lg:flex-row">
         {/* Developer's note */}
-        <div className="-ml-16 skew-x-[-30deg] overflow-hidden bg-white/15 pl-28 pr-32 font-roboto">
-          <div className="skew-x-[30deg]">
-            {/* Solarwise branding */}
-            <div className="-ml-24 skew-x-[-30deg] bg-white pl-24">
-              <div className="skew-x-[30deg]">
-                <h1 className="text-4xl py-1 text-black uppercase font-mono font-extrabold">
-                  {Strings.APP.SHORT_TITLE}
-                </h1>
-              </div>
-            </div>
+        <div className="overflow-hidden bg-white/15 px-8 font-roboto md:-ml-16 md:skew-x-[-30deg] md:pl-28 md:pr-32">
+          <div className="md:skew-x-[30deg]">
             {/* Developer's note main content */}
             <h2 className="mb-1 pt-5 text-3xl font-light text-white">
               {"Developer's Note"}
@@ -28,10 +20,10 @@ export default function Footer() {
         </div>
         {/* The newsletter */}
 
-        <Newsletter className="ml-12" />
+        <Newsletter className="md:ml-12" />
       </section>
       {/* Quick Links section */}
-      <section className="flex flex-row flex-wrap items-stretch justify-start px-12 py-20">
+      <section className="flex flex-row flex-wrap gap-10 items-stretch justify-start px-12 md:pt-20 pb-20">
         {Strings.FOOTER_LINKS.map((footerLink, index) => (
           <FooterLink {...footerLink} key={footerLink.title + index} />
         ))}

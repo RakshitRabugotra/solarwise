@@ -17,20 +17,22 @@ export default function Home() {
       {/* Hero Section */}
       <Section
         imageSrc={Images.heroBackground}
-        className="absolute left-0 top-1/2 ml-20 -translate-y-1/4"
+        blackOverlay
+        className="absolute left-0 top-1/2 -translate-y-1/2 sm:top-1/2 sm:-translate-y-1/4 md:ml-20"
       >
-        <h2 className="black my-10 max-w-2xl text-wrap text-left text-3xl font-medium text-white md:text-5xl">
+        <h2 className="black my-10 max-w-2xl text-wrap text-center text-3xl font-medium text-white md:text-left md:text-5xl">
           Experience The Future Of Solar Energy
         </h2>
-        <LocationForm />
+
+        <LocationForm className="mx-4 w-auto sm:mx-0" />
       </Section>
 
       {/* Features section */}
       <FeaturesSection separatorTop />
       {/* Benefits Sections */}
-      <BenefitsSection />
+      <BenefitsSection blackOverlay />
       {/* The footer/newsletter */}
-      <Footer/>
+      <Footer />
     </main>
   )
 }

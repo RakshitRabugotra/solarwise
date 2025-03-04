@@ -9,8 +9,9 @@ import { useRouter } from "next/navigation"
 import Strings from "@/constants/Strings"
 import { cn } from "@/lib/utils"
 import Maps from "@/constants/Maps"
+import { twMerge } from "tailwind-merge"
 
-export default function LocationForm() {
+export default function LocationForm({ className }: { className?: string }) {
   const [input, setInput] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
   const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -74,10 +75,13 @@ export default function LocationForm() {
 
   const handleSubmit = (index: number) => {
     // -1 for the case when using default location
-    const selectedLocation = index === -1 ? {
-      y: Maps.STARTING_COORDS.lat,
-      x: Maps.STARTING_COORDS.lon,
-    } : results[index >= 0 ? index : 0] // Pick the top result if nothing is selected
+    const selectedLocation =
+      index === -1
+        ? {
+            y: Maps.STARTING_COORDS.lat,
+            x: Maps.STARTING_COORDS.lon,
+          }
+        : results[index >= 0 ? index : 0] // Pick the top result if nothing is selected
 
     if (selectedLocation) {
       console.log("Submitted Location:", selectedLocation)
@@ -92,30 +96,26 @@ export default function LocationForm() {
         e.preventDefault()
         handleSubmit(selectedIndex)
       }}
-      className="flex w-full flex-col items-start justify-center max-w-screen-sm"
+      className={twMerge(
+        "flex w-full max-w-screen-sm flex-col items-center sm:items-start justify-center",
+        className
+      )}
     >
-      <div className="flex w-screen max-w-screen-sm justify-center p-3 glass">
+      <div className="glass flex w-screen max-w-full justify-center p-3">
         <input
           type="text"
           onChange={e => debouncedSetInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={Strings.ADDRESS_BAR_PLACEHOLDER}
-          className="h-full w-full p-3 text-sm sm:text-base rounded-sm shadow-md border-2 border-muted"
+          className="h-full w-full rounded-sm border-2 border-muted p-3 text-sm shadow-md sm:text-base"
         />
-        {/* <Button
-          type="submit"
-          size={"sm"}
-          className="-mr-3 rounded-none border-none bg-transparent shadow-none hover:bg-transparent"
-        >
-          <span className="hidden bg-black p-2 sm:inline-block sm:text-base">
-            {Strings.ADDRESS_BAR_SUBMIT_TEXT}
-          </span>
-          <span className="rounded-full bg-black p-2 sm:hidden">
-            <ArrowRight size={16} />
-          </span>
-        </Button> */}
       </div>
-      <ul className={cn("w-full overflow-y-auto rounded bg-white shadow-lg p-3 max-h-[25vh]", results?.length === 0 && "hidden")}>
+      <ul
+        className={cn(
+          "max-h-[25vh] w-full overflow-y-auto rounded bg-white p-3 shadow-lg",
+          results?.length === 0 && "hidden"
+        )}
+      >
         {results.map((result: SearchResult, index: number) => (
           <li
             key={index}
@@ -131,7 +131,12 @@ export default function LocationForm() {
           </li>
         ))}
       </ul>
-      <button className='underline text-lg mt-4  py-2 px-6 text-white/85' onClick={() => handleSubmit(-1)}>Or, drop a pin on the map?</button>
+      <button
+        className="mt-4 px-6 py-2 text-lg text-white/85 underline"
+        onClick={() => handleSubmit(-1)}
+      >
+        Or, drop a pin on the map?
+      </button>
     </form>
   )
 }

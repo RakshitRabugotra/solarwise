@@ -6,6 +6,7 @@ export interface SectionProps extends PropsWithChildren {
   imageSrc?: string
   separatorTop?: boolean
   separatorBottom?: boolean
+  blackOverlay?: boolean
   className?: string
   containerClassName?: string
 }
@@ -14,11 +15,17 @@ export default function Section({
   imageSrc,
   children,
   separatorTop = false,
+  blackOverlay = false,
   className,
   containerClassName,
 }: SectionProps) {
   return (
-    <div className={twMerge("relative flex h-screen max-h-[1080px] flex-col overflow-hidden", containerClassName)}>
+    <div
+      className={twMerge(
+        "relative flex h-screen max-h-[1080px] flex-col overflow-hidden",
+        containerClassName
+      )}
+    >
       {separatorTop && (
         <div className="absolute left-0 right-0 top-0 z-[5]">
           <Image
@@ -41,10 +48,13 @@ export default function Section({
           />
         </div>
       )}
+      {blackOverlay && (
+        <div className="absolute inset-0 z-[8] bg-black/20"></div>
+      )}
       <div
         className={twMerge(
-          "absolute inset-0 z-[5] flex flex-col",
-          separatorTop && "mt-[200px]",
+          "absolute inset-0 z-10 flex flex-col",
+          separatorTop && "mt-[100px] sm:mt-[200px]",
           className
         )}
       >
