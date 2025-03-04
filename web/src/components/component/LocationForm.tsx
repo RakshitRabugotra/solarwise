@@ -110,33 +110,35 @@ export default function LocationForm({ className }: { className?: string }) {
           className="h-full w-full rounded-sm border-2 border-muted p-3 text-sm shadow-md sm:text-base"
         />
       </div>
-      <ul
-        className={cn(
-          "max-h-[25vh] w-full overflow-y-auto rounded bg-white p-3 shadow-lg",
-          results?.length === 0 && "hidden"
-        )}
-      >
-        {results.map((result: SearchResult, index: number) => (
-          <li
-            key={index}
-            ref={el => {
-              resultRefs.current[index] = el
-            }}
-            onClick={() => handleSelectResult(index)}
-            className={`cursor-pointer border-b p-2 last:border-none hover:bg-gray-100 ${
-              selectedIndex === index ? "bg-gray-200" : ""
-            }`}
-          >
-            {result.label}
-          </li>
-        ))}
-      </ul>
-      <button
-        className="mt-4 px-6 py-2 text-lg text-white/85 underline"
-        onClick={() => handleSubmit(-1)}
-      >
-        Or, drop a pin on the map?
-      </button>
+      <div className="relative w-full">
+        <ul
+          className={cn(
+            "max-h-[25vh] absolute top-0 z-20 w-full overflow-y-auto rounded bg-white p-3 shadow-lg",
+            results?.length === 0 && "hidden"
+          )}
+        >
+          {results.map((result: SearchResult, index: number) => (
+            <li
+              key={index}
+              ref={el => {
+                resultRefs.current[index] = el
+              }}
+              onClick={() => handleSelectResult(index)}
+              className={`cursor-pointer border-b p-2 last:border-none hover:bg-gray-100 ${
+                selectedIndex === index ? "bg-gray-200" : ""
+              }`}
+            >
+              {result.label}
+            </li>
+          ))}
+        </ul>
+        <button
+          className="mt-4 absolute top-0 px-6 py-2 text-lg text-white/85 underline"
+          onClick={() => handleSubmit(-1)}
+        >
+          Or, drop a pin on the map?
+        </button>
+      </div>
     </form>
   )
 }
