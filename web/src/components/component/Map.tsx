@@ -37,8 +37,8 @@ export default function Map() {
   )
 
   const [position, setPosition] = useState<[number, number]>([
-    storedLocation.x ?? Maps.STARTING_COORDS.lat,
     storedLocation.y ?? Maps.STARTING_COORDS.lon,
+    storedLocation.x ?? Maps.STARTING_COORDS.lat,
   ])
 
   console.log("position: ", position)

@@ -1,13 +1,11 @@
 "use client"
 
+import "@/components/ui/form"
 import { useEffect, useState, useRef } from "react"
 import { useDebounceCallback } from "usehooks-ts"
 import { OpenStreetMapProvider } from "leaflet-geosearch"
-import { Button } from "../ui/button"
 import { SearchResult } from "leaflet-geosearch/dist/providers/provider.js"
 import { useRouter } from "next/navigation"
-import "@/components/ui/form"
-import { ArrowRight } from "lucide-react"
 import Strings from "@/constants/Strings"
 import { cn } from "@/lib/utils"
 import Maps from "@/constants/Maps"
@@ -94,9 +92,9 @@ export default function LocationForm() {
         e.preventDefault()
         handleSubmit(selectedIndex)
       }}
-      className="flex w-full flex-col items-center justify-center bg-slate-200 max-w-screen-sm mx-auto"
+      className="flex w-full flex-col items-start justify-center max-w-screen-sm"
     >
-      <div className="flex w-screen max-w-screen-sm items-center justify-center p-3">
+      <div className="flex w-screen max-w-screen-sm justify-center p-3 glass">
         <input
           type="text"
           onChange={e => debouncedSetInput(e.target.value)}
@@ -133,7 +131,7 @@ export default function LocationForm() {
           </li>
         ))}
       </ul>
-      <button className='text-muted-foreground underline text-lg py-8' onClick={() => handleSubmit(-1)}>Or, drop a pin on the map?</button>
+      <button className='underline text-lg mt-4  py-2 px-6 text-white/85' onClick={() => handleSubmit(-1)}>Or, drop a pin on the map?</button>
     </form>
   )
 }
