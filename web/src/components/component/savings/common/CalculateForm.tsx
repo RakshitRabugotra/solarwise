@@ -29,6 +29,7 @@ import { calculateAction } from "@/actions/actions"
 import { BaseAPIRequestBody, EnergyEstimation } from "@/types"
 import { setConfig } from "next/config"
 import * as CONFIG from "@/lib/constants"
+import { twMerge } from "tailwind-merge"
 
 type FormErrors = {
   roofArea?: string[]
@@ -37,11 +38,15 @@ type FormErrors = {
   mountingSlope?: string[]
 }
 
+export interface CalculateFormProps {
+  onConfigChange: (config: BaseAPIRequestBody | null) => void
+  className?: string
+}
+
 export default function CalculateForm({
-  setConfig,
-}: {
-  setConfig: React.Dispatch<React.SetStateAction<BaseAPIRequestBody | null>>
-}) {
+  onConfigChange,
+  className
+}: CalculateFormProps) {
   // Get the position of the user stored from the local-storage
   const storedLocation = JSON.parse(
     localStorage.getItem("user-location") || "null"
@@ -70,7 +75,7 @@ export default function CalculateForm({
     setErrors({})
 
     // Set the config body
-    setConfig(_prev => ({
+    onConfigChange({
       area: Number(result.data.roofArea),
       technology: result.data.pvTechnology,
       efficiency: 0.223,
@@ -80,11 +85,11 @@ export default function CalculateForm({
       costToUnit: CONFIG.COST_TO_UNIT,
       costToInstallation: CONFIG.COST_TO_INSTALLATION,
       adjustInflation: CONFIG.ADJUST_FOR_INSTALLATION,
-    }))
+    })
   }
 
   return (
-    <Card className="lg:max-w-md rounded-none lg:rounded-sm">
+    <Card className={twMerge("lg:max-w-md rounded-none lg:rounded-sm", className)}>
       <CardHeader>
         <CardTitle className="text-lg md:text-xl lg:text-2xl">Little more?</CardTitle>
         <CardDescription className="text-sm md:text-base">

@@ -1,0 +1,9 @@
+export default {
+  CALCULATION_VALUE: {
+    PREDICTION_YEAR_OFFSET: 6,
+    PREDICTION_TO_YEAR: new Date().getFullYear() + 6,
+    COST_TO_UNIT: 7,
+    COST_TO_INSTALLATION: 1_50_000,
+    ADJUST_FOR_INSTALLATION: false,
+  },
+}
