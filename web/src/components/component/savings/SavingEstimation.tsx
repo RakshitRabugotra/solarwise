@@ -7,7 +7,7 @@ import { EnergyEstimation } from "@/types"
 import EstimationCarousel from "./common/EstimationCarousel"
 
 export default function SavingEstimation() {
-  const [production, setProduction] = useState<EnergyEstimation | null>(null)
+  // const [production, setProduction] = useState<EnergyEstimation | null>(null)
 
   const scrollToSavings = () => {}
 
@@ -16,11 +16,13 @@ export default function SavingEstimation() {
       <section className="flex h-[80vh] w-full flex-row items-center justify-around gap-10 bg-gray-300 md:px-10">
         <Map />
         <CalculateForm
-          setProduction={setProduction}
+          onConfigChange={() => {}}
+          // onConfigChange={data => setProduction(data)}
+          // setProduction={setProduction}
           // scrollTrigger={scrollToSavings}
         />
       </section>
-      <EstimationCarousel production={production} />
+      {/* <EstimationCarousel production={production} /> */}
     </>
   )
 }
