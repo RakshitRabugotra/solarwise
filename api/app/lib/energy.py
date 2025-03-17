@@ -231,7 +231,7 @@ def get_estimated_energy_by_year(
                 "year": date.year,
                 "month": get_month_abbr(date.month - 1),
                 "energy": energy,
-                "peak-sunlight-hours": hours * 0.6,
+                "peakSunlightHours": hours * 0.6,
             }
         )
         # Increment the date
