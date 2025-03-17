@@ -17,6 +17,7 @@ import "leaflet-geosearch/dist/geosearch.css"
 import "./style.css"
 import L from "leaflet"
 import Maps from "@/constants/Maps"
+import { twMerge } from "tailwind-merge"
 
 const pinIcon = new Icon({
   iconUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png",
@@ -31,7 +32,13 @@ const icon = L.icon({
   shadowUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-shadow.png",
 })
 
-export default function Map() {
+export interface MapProps {
+  className?: string
+}
+
+export default function Map({
+  className
+} : MapProps) {
   const storedLocation = JSON.parse(
     localStorage.getItem("user-location") || "null"
   )
@@ -72,7 +79,7 @@ export default function Map() {
   }
 
   return (
-    <div className="relative md:basis-2/3 basis-full h-full">
+    <div className={twMerge("relative h-full", className)}>
       <MapContainer center={position} zoom={15} scrollWheelZoom={false} className="!w-full !h-full" >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

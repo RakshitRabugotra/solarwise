@@ -21,7 +21,7 @@ export interface EnergyEstimation {
     year: number
     month: string
     energy: number
-    "peak-sunlight-hours": number
+    peakSunlightHours: number
   }[]
   greenFactor: {
     trees: number
@@ -44,7 +44,14 @@ export interface EnergyEstimation {
 
 export interface BreakEventPointEstimation {
   years: {
-    [key: string]: EnergyEstimation[]
+    [key: string]: {
+      energy: number
+      month: string
+      order: number
+      peakSunlightHours: number
+      radiation: number
+      year: number
+    }[]
   }
   total: number
   energyInCost: {
@@ -59,5 +66,5 @@ export interface BreakEventPointEstimation {
     formatted: string
     amount: number
   }
-  break_even: { amount: number; unit: "year" }
+  breakEven: { amount: number; unit: "year" | string }
 }

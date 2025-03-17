@@ -2,7 +2,7 @@ import Settings from "@/constants/Settings"
 import { EnergyEstimation } from "@/types"
 import { twMerge } from "tailwind-merge"
 
-export default function Statistics({
+export default function CalculateStats({
   data,
 }: {
   data: EnergyEstimation | null

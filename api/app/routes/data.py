@@ -234,7 +234,7 @@ def get_breakeven_point():
                 "formatted": format_currency(final_cost_to_unit),
                 "amount": final_cost_to_unit,
             },
-            "break_even": {"amount": break_even, "unit": "year"},
+            "breakEven": {"amount": break_even, "unit": "year"},
         },
     ).response
 
