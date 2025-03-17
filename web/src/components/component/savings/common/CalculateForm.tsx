@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { calculateFormSchema } from "@/schema/schema"
-import { calculateAction } from "@/actions/actions"
+import { calculateAction } from "@/service"
 import { BaseAPIRequestBody, EnergyEstimation } from "@/types"
 import { setConfig } from "next/config"
 import * as CONFIG from "@/lib/constants"

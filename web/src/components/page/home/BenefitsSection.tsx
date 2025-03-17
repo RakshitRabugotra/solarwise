@@ -1,7 +1,7 @@
 import Images from "@/constants/Images"
-import Section, { SectionProps } from "../Section"
-import BenefitCarousel from "../carousel/BenefitCarousel"
-import PartnerCarousel from "../carousel/PartnerCarousel"
+import Section, { SectionProps } from "../../component/Section"
+import BenefitCarousel from "../../component/carousel/BenefitCarousel"
+import PartnerCarousel from "../../component/carousel/PartnerCarousel"
 
 export default function BenefitsSection({ ...props }: SectionProps) {
   return (

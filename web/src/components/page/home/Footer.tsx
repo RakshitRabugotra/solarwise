@@ -1,5 +1,5 @@
 import Strings from "@/constants/Strings"
-import Newsletter from "../Newsletter"
+import Newsletter from "../../component/Newsletter"
 
 export default function Footer() {
   return (

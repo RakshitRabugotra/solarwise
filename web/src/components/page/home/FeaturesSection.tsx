@@ -1,5 +1,5 @@
-import FeatureCarousel from "../carousel/FeatureCarousel"
-import Section, { SectionProps } from "../Section"
+import FeatureCarousel from "../../component/carousel/FeatureCarousel"
+import Section, { SectionProps } from "../../component/Section"
 
 export default function FeaturesSection({ ...rest }: SectionProps) {
   return (
