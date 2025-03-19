@@ -3,6 +3,7 @@
 import CalculateForm, {
   CalculateFormProps,
 } from "@/components/component/savings/common/CalculateForm"
+import Images from "@/constants/Images"
 import { calculateAction, calculateBreakEven } from "@/service"
 import {
   BaseAPIRequestBody,
@@ -10,7 +11,7 @@ import {
   EnergyEstimation,
 } from "@/types"
 import dynamic from "next/dynamic"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 
 // Dynamic Imports
 const Map = dynamic(() => import("@/components/component/Map"), {
@@ -27,7 +28,7 @@ export interface CalculateHeroProps {
   // Request events
   onRequestInit?: () => void
   onRequestEnd?: () => void
-  onRequestError?: (error :Error) => void
+  onRequestError?: (error: Error) => void
 }
 
 export default function CalculateHero({
@@ -35,9 +36,8 @@ export default function CalculateHero({
   onBreakEvenEstimation,
   onRequestInit,
   onRequestEnd,
-  onRequestError
+  onRequestError,
 }: CalculateHeroProps) {
-
   const fetchPrediction = useCallback(async (apiConfig: BaseAPIRequestBody) => {
     const { response, error } = await calculateAction(apiConfig)
     if (!response || error) {
@@ -55,32 +55,42 @@ export default function CalculateHero({
   }, [])
 
   const onSubmit = (config: BaseAPIRequestBody) => {
-    onRequestInit && onRequestInit();
+    onRequestInit && onRequestInit()
     // Request for all the things
     Promise.all([fetchPrediction(config), fetchBreakEven(config)])
-    .then(([energyEstimates, breakEvenData]) => {
-      // Fulfill the callbacks
-      if(!energyEstimates || energyEstimates instanceof Error) {
-        return Promise.reject("Couldn't get energy estimate" + energyEstimates)
-      } 
-      // Check the promise for other
-      if(!breakEvenData || breakEvenData instanceof Error) {
-        return Promise.reject("Couldn't get break even estimate" + breakEvenData)
-      }
-      // Call the callbacks :)
-      onEnergyEstimation(energyEstimates)
-      onBreakEvenEstimation(breakEvenData);
-    })
-    .catch(error => onRequestError && onRequestError(error))
-    .finally(() => onRequestEnd && onRequestEnd())
+      .then(([energyEstimates, breakEvenData]) => {
+        // Fulfill the callbacks
+        if (!energyEstimates || energyEstimates instanceof Error) {
+          return Promise.reject(
+            "Couldn't get energy estimate" + energyEstimates
+          )
+        }
+        // Check the promise for other
+        if (!breakEvenData || breakEvenData instanceof Error) {
+          return Promise.reject(
+            "Couldn't get break even estimate" + breakEvenData
+          )
+        }
+        // Call the callbacks :)
+        onEnergyEstimation(energyEstimates)
+        onBreakEvenEstimation(breakEvenData)
+      })
+      .catch(error => onRequestError && onRequestError(error))
+      .finally(() => onRequestEnd && onRequestEnd())
   }
 
   // The big hero section
   return (
-    <section className="flex h-screen flex-col items-stretch md:flex-row md:justify-between">
+    <section
+      className="flex h-screen flex-col items-stretch bg-cover bg-center md:flex-row md:justify-between"
+      style={{ backgroundImage: `url(${Images.calculateHeroBackground})` }}
+    >
+      {/* The map on the left side */}
       <Map className="basis-full md:basis-2/3" />
-
-      <div className="flex w-full basis-full flex-col items-center justify-center md:basis-1/3 md:px-10">
+      {/* The form on the right side */}
+      <div className="relative flex w-full basis-full flex-col items-center justify-center md:basis-1/3 md:px-10">
+        {/* The overlay of black color */}
+        <div className="absolute inset-0 bg-black/50"></div>
         <ConfigForm onSubmit={onSubmit} />
       </div>
     </section>
@@ -97,5 +107,5 @@ const ConfigForm = ({
     return onSubmit(config)
   }
 
-  return <CalculateForm onConfigChange={onConfigChange} />
+  return <CalculateForm onConfigChange={onConfigChange} className="z-10" />
 }

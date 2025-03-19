@@ -8,14 +8,10 @@ import Settings from "@/constants/Settings"
 // Type definitions
 import { BreakEventPointEstimation, EnergyEstimation } from "@/types"
 import { twMerge } from "tailwind-merge"
-import Section from "@/components/component/Section"
-import Statistics from "@/components/page/calculate/CalculateStats"
+import Estimation from "./visuals"
 
-const Loader = () => (
-  <section className="flex min-h-screen flex-col items-center justify-center">
-    <div className="loader"></div>
-  </section>
-)
+import samplePrediction from "@/data/sample-prediction.json"
+import sampleBreakEven from "@/data/sample-break-even.json"
 
 export default function CalculateMainContent() {
   const [submitStatus, setSubmitStatus] = useState<
@@ -24,13 +20,13 @@ export default function CalculateMainContent() {
 
   const [energyEstimateData, setEnergyEstimateData] =
     useState<EnergyEstimation | null>(
-      // samplePrediction
-      null
+      samplePrediction
+      // null
     )
   const [breakEvenData, setBreakEvenData] =
     useState<BreakEventPointEstimation | null>(
-      // sampleBreakEven
-      null
+      sampleBreakEven
+      // null
     )
 
   // {/* The main content starts */}
@@ -46,68 +42,20 @@ export default function CalculateMainContent() {
       />
 
       {/* The hidden content */}
-      <StatisticEstimates
+      <Estimation.SolarEnergy
+        isHidden={submitStatus !== "unset"}
+        isLoading={submitStatus === "loading"}
+        energyEstimateData={energyEstimateData}
+      />
+      <Estimation.BreakEven
         isHidden={submitStatus !== "unset"}
         isLoading={submitStatus === "loading"}
         breakEvenData={breakEvenData}
-        energyEstimateData={energyEstimateData}
       />
-
-      {/* <Parallax pages={2} style={{ top: 0, left: 0}}>
-            <ParallaxLayer offset={0} speed={0.5}>
-              <div className="bg-red-600 w-full h-full"></div>
-            </ParallaxLayer>
-            <ParallaxLayer offset={1} speed={2.5}>
-              <div className='bg-lime-600 w-full h-full'></div>
-            </ParallaxLayer>
-          </Parallax> */}
     </div>
   )
 }
 
-interface ChildProps {
-  energyEstimateData: EnergyEstimation | null
-  breakEvenData: BreakEventPointEstimation | null
-}
-
-const StatisticEstimates = ({
-  isHidden = false,
-  isLoading = false,
-  breakEvenData,
-  energyEstimateData,
-}: { isHidden?: boolean; isLoading?: boolean } & ChildProps) => {
-  if (isHidden) return null
-
-  return (
-    <section className="container mx-auto bg-transparent">
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <EfficiencyLayer energyEstimateData={energyEstimateData} />
-      )}
-
-      <section className="bg-lime-100/60">
-        {/* The break even point */}
-        <BreakEvenPoint
-          data={energyEstimateData}
-          breakEvenData={breakEvenData}
-        />
-      </section>
-    </section>
-  )
-}
-
-const EfficiencyLayer = ({
-  energyEstimateData,
-}: {
-  energyEstimateData: EnergyEstimation | null
-}) => {
-  return (
-    <Section className="justify-center">
-      <Statistics data={energyEstimateData} />
-    </Section>
-  )
-}
 
 // {/* Add the background image and overlay */}
 // <div className="absolute inset-0 z-0">
