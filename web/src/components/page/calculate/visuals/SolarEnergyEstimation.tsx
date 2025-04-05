@@ -1,9 +1,11 @@
-import { EnergyEstimation } from "@/types"
-import { EstimateCommonProps, Loader } from "."
-import Section from "@/components/component/Section"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useMemo, useState } from "react"
+// ui
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// Custom Components
+import { EstimateCommonProps, Loader } from "."
+// Type definitions
+import { EnergyEstimation } from "@/types"
 
 import {
   Chart as ChartJS,
@@ -142,13 +144,6 @@ export const SolarEnergyEstimation = ({
                   Use the tab controls to adjust the snapshot duration as
                   needed.
                 </p>
-                {/* <p className="mt-10">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi
-                  voluptatibus dolorum dolores dicta nihil, eveniet placeat.
-                  Reprehenderit tenetur voluptatem, iusto, voluptas provident
-                  corporis, minus culpa quisquam blanditiis reiciendis cum
-                  impedit.
-                </p> */}
               </div>
               {/* The Solar Energy graph */}
               <div className="mx-0 mt-6 flex basis-3/5 flex-col rounded-md border-2 border-black/10 p-2 sm:ml-6 sm:mt-0 sm:p-6 xl:h-[600px]">
