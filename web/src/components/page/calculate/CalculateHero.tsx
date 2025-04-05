@@ -25,13 +25,7 @@ const Map = dynamic(() => import("@/components/component/Map"), {
   ),
   ssr: false,
 })
-
-interface CalculateHeroMiscProps {
-  showTooltip?: boolean
-  toolTipText?: string
-}
-
-export interface CalculateHeroProps extends CalculateHeroMiscProps {
+export interface CalculateHeroProps {
   // Data fulfillment events
   onEnergyEstimation: (energyEstimates: EnergyEstimation) => void
   onBreakEvenEstimation: (breakEven: BreakEventPointEstimation) => void
@@ -42,8 +36,6 @@ export interface CalculateHeroProps extends CalculateHeroMiscProps {
 }
 
 export default function CalculateHero({
-  showTooltip = false,
-  toolTipText = "Enter the roof area to get started",
   onEnergyEstimation,
   onBreakEvenEstimation,
   onRequestInit,
@@ -104,17 +96,6 @@ export default function CalculateHero({
         {/* The overlay of black color */}
         <div className="absolute inset-0 bg-black/50"></div>
         <ConfigForm onSubmit={onSubmit} />
-
-        {/* Show the tooltip in the bottom center of this section */}
-        {/* <div
-          className={`absolute bottom-4 left-0 right-0 z-10 flex h-16 items-center justify-center ${
-            showTooltip ? "visible block" : "invisible hidden"
-          }`}
-        >
-          <div className="flex h-full w-full max-w-xs items-center justify-center rounded-lg bg-black p-4 text-center text-lg font-bold text-white shadow-md">
-            {toolTipText}
-          </div>
-        </div> */}
       </div>
     </section>
   )
@@ -130,5 +111,10 @@ const ConfigForm = ({
     return onSubmit(config)
   }
 
-  return <CalculateForm onConfigChange={onConfigChange} className="z-10" />
+  return (
+    <CalculateForm
+      onConfigChange={onConfigChange}
+      className="z-10 h-full w-full sm:h-auto sm:w-auto"
+    />
+  )
 }

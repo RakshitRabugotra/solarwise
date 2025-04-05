@@ -156,7 +156,9 @@ export const BreakEvenEstimation = ({
                   id="costToUnit"
                   name="costToUnit"
                   placeholder="7"
-                  defaultValue={breakEven?.adjustedCostToUnit.amount}
+                  defaultValue={Number(
+                    breakEven?.adjustedCostToUnit.amount.toFixed(0)
+                  )}
                   className="rounded-md border-2 border-gray-300 p-2 text-black"
                 />
 
@@ -171,7 +173,9 @@ export const BreakEvenEstimation = ({
                   id="costToInstallation"
                   name="costToInstallation"
                   placeholder="150000"
-                  defaultValue={breakEven?.adjustedCostToInstallation.amount}
+                  defaultValue={Number(
+                    breakEven?.adjustedCostToInstallation.amount.toFixed(0)
+                  )}
                   className="rounded-md border-2 border-gray-300 p-2 text-black"
                 />
 

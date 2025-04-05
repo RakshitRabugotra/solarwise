@@ -47,8 +47,6 @@ export default function CalculateMainContent() {
         onRequestInit={() => setSubmitStatus("loading")}
         onRequestEnd={() => setSubmitStatus("completed")}
         onRequestError={() => setSubmitStatus("completed")}
-        showTooltip={submitStatus === "unset"}
-        toolTipText="Enter the roof area to get started"
       />
 
       {/* The hidden content */}
@@ -59,7 +57,7 @@ export default function CalculateMainContent() {
       )}
       {submitStatus === "unset" && (
         <div className="flex h-screen items-center justify-center bg-black">
-          <div className="text-3xl font-bold text-white">
+          <div className="p-6 text-3xl font-bold text-white">
             {/* The main content */}
             <h1>Get started by entering the roof area</h1>
           </div>
