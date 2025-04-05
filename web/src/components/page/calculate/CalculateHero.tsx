@@ -4,7 +4,7 @@ import { useCallback } from "react"
 import dynamic from "next/dynamic"
 
 // Custom Components
-import CalculateForm from "@/components/component/savings/common/CalculateForm"
+import CalculateForm from "@/components/component/CalculateForm"
 // Services
 import { calculateAction, calculateBreakEven } from "@/service"
 // Constants/Configs
