@@ -19,7 +19,9 @@ import {
 // Dynamic Imports
 const Map = dynamic(() => import("@/components/component/Map"), {
   loading: () => (
-    <div className="h-full w-full basis-full animate-pulse rounded-lg bg-gray-300 md:basis-2/3"></div>
+    <div className="h-full w-full basis-full bg-black md:basis-2/3">
+      <div className="h-full w-full animate-pulse bg-white/40"></div>
+    </div>
   ),
   ssr: false,
 })
