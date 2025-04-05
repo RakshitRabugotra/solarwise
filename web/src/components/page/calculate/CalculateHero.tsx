@@ -1,17 +1,20 @@
 "use client"
 
-import CalculateForm, {
-  CalculateFormProps,
-} from "@/components/component/savings/common/CalculateForm"
-import Images from "@/constants/Images"
+import { useCallback } from "react"
+import dynamic from "next/dynamic"
+
+// Custom Components
+import CalculateForm from "@/components/component/savings/common/CalculateForm"
+// Services
 import { calculateAction, calculateBreakEven } from "@/service"
+// Constants/Configs
+import Images from "@/constants/Images"
+// Type definitions
 import {
   BaseAPIRequestBody,
   BreakEventPointEstimation,
   EnergyEstimation,
 } from "@/types"
-import dynamic from "next/dynamic"
-import { useCallback } from "react"
 
 // Dynamic Imports
 const Map = dynamic(() => import("@/components/component/Map"), {
@@ -21,7 +24,12 @@ const Map = dynamic(() => import("@/components/component/Map"), {
   ssr: false,
 })
 
-export interface CalculateHeroProps {
+interface CalculateHeroMiscProps {
+  showTooltip?: boolean
+  toolTipText?: string
+}
+
+export interface CalculateHeroProps extends CalculateHeroMiscProps {
   // Data fulfillment events
   onEnergyEstimation: (energyEstimates: EnergyEstimation) => void
   onBreakEvenEstimation: (breakEven: BreakEventPointEstimation) => void
@@ -32,6 +40,8 @@ export interface CalculateHeroProps {
 }
 
 export default function CalculateHero({
+  showTooltip = false,
+  toolTipText = "Enter the roof area to get started",
   onEnergyEstimation,
   onBreakEvenEstimation,
   onRequestInit,
@@ -92,6 +102,17 @@ export default function CalculateHero({
         {/* The overlay of black color */}
         <div className="absolute inset-0 bg-black/50"></div>
         <ConfigForm onSubmit={onSubmit} />
+
+        {/* Show the tooltip in the bottom center of this section */}
+        {/* <div
+          className={`absolute bottom-4 left-0 right-0 z-10 flex h-16 items-center justify-center ${
+            showTooltip ? "visible block" : "invisible hidden"
+          }`}
+        >
+          <div className="flex h-full w-full max-w-xs items-center justify-center rounded-lg bg-black p-4 text-center text-lg font-bold text-white shadow-md">
+            {toolTipText}
+          </div>
+        </div> */}
       </div>
     </section>
   )
