@@ -22,6 +22,7 @@ const Estimation = {
       breakEvenData: BreakEventPointEstimation | null
     }
   ) => <BreakEvenEstimation {...props} />,
+  Loader: () => <Loader />,
 }
 
 export default Estimation
