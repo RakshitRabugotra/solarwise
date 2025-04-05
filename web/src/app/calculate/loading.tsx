@@ -1,5 +1,7 @@
 export default function LoadingFallback() {
-  return <div className='h-screen justify-center items-center flex bg-green-100'>
-    LOADING!!!
-  </div>
+  return (
+    <div className="flex h-screen items-center justify-center bg-black">
+      <div className="loader"></div>
+    </div>
+  )
 }
