@@ -101,10 +101,16 @@ def get_energy_prediction():
             msg="Internal Server error", code=500, payload={"error": str(e)}
         ).response
 
+    # Group the energy by year
+    grouped_by_year = dict()
+    for d in energies_by_month:
+        t = grouped_by_year.setdefault(d["year"], [])
+        t.append(d)
+
     return Success(
         msg="energy for the year",
         payload={
-            "months": energies_by_month,
+            "years": grouped_by_year,
             "total": total_energy,
             "greenFactor": green,
         },

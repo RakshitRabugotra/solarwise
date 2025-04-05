@@ -15,14 +15,16 @@ export interface BaseAPIRequestBody {
 }
 
 export interface EnergyEstimation {
-  months: {
-    radiation: number
-    order: number
-    year: number
-    month: string
-    energy: number
-    peakSunlightHours: number
-  }[]
+  years: {
+    [key: string]: {
+      energy: number
+      month: string
+      order: number
+      peakSunlightHours: number
+      radiation: number
+      year: number
+    }[]
+  }
   greenFactor: {
     trees: number
     carbonEmission: {
