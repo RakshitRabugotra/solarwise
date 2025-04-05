@@ -1,17 +1,12 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 // Custom Components
 import CalculateHero from "./CalculateHero"
-// Constants/Configs
-import Settings from "@/constants/Settings"
 // Type definitions
 import { BreakEventPointEstimation, EnergyEstimation } from "@/types"
-import { twMerge } from "tailwind-merge"
-import Estimation from "./visuals"
 
-import samplePrediction from "@/data/sample-prediction.json"
-import sampleBreakEven from "@/data/sample-break-even.json"
+import Estimation from "./visuals"
 
 export default function CalculateMainContent() {
   const [submitStatus, setSubmitStatus] = useState<
@@ -20,13 +15,13 @@ export default function CalculateMainContent() {
 
   const [energyEstimateData, setEnergyEstimateData] =
     useState<EnergyEstimation | null>(
-      samplePrediction
-      // null
+      // samplePrediction
+      null
     )
   const [breakEvenData, setBreakEvenData] =
     useState<BreakEventPointEstimation | null>(
-      sampleBreakEven
-      // null
+      // sampleBreakEven
+      null
     )
 
   useEffect(() => {
