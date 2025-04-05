@@ -1,6 +1,6 @@
 import locale
 
-locale.setlocale(locale.LC_ALL, "")
+locale.setlocale(locale.LC_ALL, "en_IN.UTF-8")
 
 # The inflation rates
 INFLATION_CURRENCY_RATE = 6.21
