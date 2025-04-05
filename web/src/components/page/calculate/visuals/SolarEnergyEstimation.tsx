@@ -151,7 +151,7 @@ export const SolarEnergyEstimation = ({
                 </p> */}
               </div>
               {/* The Solar Energy graph */}
-              <div className="mx-0 mt-6 flex basis-3/5 flex-col rounded-md border-2 border-black/10 p-2 sm:ml-6 sm:mt-0 sm:p-6">
+              <div className="mx-0 mt-6 flex basis-3/5 flex-col rounded-md border-2 border-black/10 p-2 sm:ml-6 sm:mt-0 sm:p-6 xl:h-[600px]">
                 {/* The tabs and tablist to control behavior */}
                 <Tabs
                   defaultValue="all"
@@ -165,7 +165,7 @@ export const SolarEnergyEstimation = ({
                     <TabsTrigger value="2026">2026</TabsTrigger>
                   </TabsList>
                 </Tabs>
-                <div className="mx-auto">
+                <div className="mx-auto h-full">
                   <EnergyChart solarData={solarData} activeYear={activeYear} />
                 </div>
               </div>
@@ -256,7 +256,13 @@ const EnergyChart = ({
 
   if (!energyChartData) return null
 
-  return <Line options={lineOptions} data={energyChartData} />
+  return (
+    <Line
+      options={lineOptions}
+      data={energyChartData}
+      className="!h-full !w-full"
+    />
+  )
 }
 
 const GenericChart = ({
