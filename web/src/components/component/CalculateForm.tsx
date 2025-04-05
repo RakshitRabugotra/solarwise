@@ -23,6 +23,7 @@ import * as CONFIG from "@/lib/constants"
 import { twMerge } from "tailwind-merge"
 import { BaseAPIRequestBody } from "@/types"
 import useLocalStorage from "@/hooks/use-local-storage"
+import Maps from "@/constants/Maps"
 
 type FormErrors = {
   roofArea?: string[]
@@ -45,10 +46,13 @@ export default function CalculateForm({
 
   const storedLocation = useMemo(() => (item ? JSON.parse(item) : null), [item])
 
-  const { current: position } = useRef<[number, number]>([
-    storedLocation?.y,
-    storedLocation?.x,
-  ])
+  const position = useMemo<[number, number]>(
+    () => [
+      storedLocation?.y ?? Maps.STARTING_COORDS.lon,
+      storedLocation?.x ?? Maps.STARTING_COORDS.lat,
+    ],
+    []
+  )
 
   const [errors, setErrors] = useState<FormErrors>({})
 

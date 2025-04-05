@@ -48,8 +48,6 @@ export default function Map({
     storedLocation.x ?? Maps.STARTING_COORDS.lat,
   ])
 
-  console.log("position: ", position)
-
   const [error, setError] = useState<string | null>(null)
 
   const handleSuccess = (position: GeolocationPosition) => {

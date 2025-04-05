@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import clsx from "clsx"
 
 // ui
@@ -102,6 +102,13 @@ export const BreakEvenEstimation = ({
     }
     setFetching(false)
   }
+
+  // Update the break even data from props
+  useEffect(() => {
+    if (breakEvenData) {
+      setBreakEven(breakEvenData)
+    }
+  }, [breakEvenData])
 
   if (isHidden) return null
 
