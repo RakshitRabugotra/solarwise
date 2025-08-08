@@ -166,108 +166,6 @@ def calculate_omegao(delta: float, phi: float):
     return omegao
 
 
-def get_estimated_energy(
-    lat: float,
-    lon: float,
-    area: float,
-    efficiency: float | None = 0.223,
-    month: int | None = None,
-    to_year: int | None = None,
-) -> float | None:
-    """
-    Estimate the energy output of a solar panel system for a given location and month.
-
-    Parameters:
-    - lat (float): Latitude of the location (in decimal degrees).
-    - lon (float): Longitude of the location (in decimal degrees).
-    - area (float): Area of the solar panels (in square meters).
-    - panel_efficiency (float): Efficiency of the solar panels (between 0 and 1).
-      If None, defaults to 0.223 (22.3%).
-    - month (int | None): The month for which to estimate energy (1 for January, ..., 12 for December).
-      If None, returns the average energy output for the whole year.
-
-    Returns:
-    - float | None: Estimated energy output in kWh for the specified month or average yearly output.
-      Returns None if data retrieval fails or if files are not found.
-
-    Raises:
-    - ValueError: If data for the specified year is not available.
-
-    Note:
-    - The function assumes the use of a class `NetCDFRetriever` to retrieve weather data,
-      and a class `NetCDFExtractor` to extract solar radiation data.
-    - The sunlight hours are adjusted with an empirical factor of 0.6 to account for peak hours.
-    """
-    current_year = datetime.datetime.now().year
-    year = year or current_year + 1
-
-    # Redefine efficiency with a constants
-    efficiency = efficiency or 0.223
-    # Round the month for inputs
-    month = month % 12 if month is not None else None
-    SDLR = []
-
-    if year < current_year:
-        # Retrieve for the last year
-        files = None
-        try:
-            retriever = NetCDFRetriever()
-            files = retriever.retrieve(year)
-        except ValueError:
-            print("The data is not up-to-date, for year:", year)
-            return None
-
-        # If the files aren't found, return None
-        if files is None:
-            return None
-
-        # Extract the SDLR data
-        SDLR = list(
-            map(lambda dt: dt["sdlr"], NetCDFExtractor.get_sdlr(files, lat, lon))
-        )
-    else:
-        raise "Cannot fetch for future dates, use prediction"
-
-    total = 0
-    # Return the energy for a particular month
-    if month is not None:
-        # Average sunlight received for the particular month
-        hours = get_sunlight_hours(lat, -1, get_month_abbr(month))
-        # Adjustment factor for sunlight, accounting for peak hours
-        adjustment_factor = 0.6
-        hours *= adjustment_factor
-        # The SDLR for the particular month
-        radiation = SDLR[month - 1]
-        # Energy output for the scenario (in kWh) (in a single day)
-        energy = (radiation * area * hours) / 1000
-        # Account for the efficiency of the panel
-        energy *= efficiency
-        total = energy
-        return {"order": 0, "month": get_month_abbr(month), "energy": energy}, total
-
-    # Else, return an average energy for the whole year
-    month_energies = []
-
-    for i in range(1, 13):  # Corrected to loop through all months (1 to 12)
-        # Average sunlight received for the particular month
-        hours = get_sunlight_hours(lat, -1, get_month_abbr(i))
-        # Adjustment factor for sunlight, accounting for peak hours
-        adjustment_factor = 0.6
-        hours *= adjustment_factor
-        # The SDLR radiation for this month
-        radiation = SDLR[i]
-        energy = (radiation * area * hours) / 1000
-        energy *= efficiency * date_range(i + 1, year)
-        month_energies.append(energy)
-
-    # Return an average, adjusted for efficiency
-    for i, energy in enumerate(month_energies):
-        month_energies[i] = {"order": i, "month": get_month_abbr(i), "energy": energy}
-        total += energy
-
-    return month_energies, total
-
-
 def get_estimated_energy_by_year(
     lat: float,
     lon: float,
@@ -333,7 +231,7 @@ def get_estimated_energy_by_year(
                 "year": date.year,
                 "month": get_month_abbr(date.month - 1),
                 "energy": energy,
-                "peak-sunlight-hours": hours * 0.6,
+                "peakSunlightHours": hours * 0.6,
             }
         )
         # Increment the date
@@ -343,7 +241,32 @@ def get_estimated_energy_by_year(
     for i, object in enumerate(yearly_energies):
         total += object["energy"]
 
-    return yearly_energies, total
+    return yearly_energies, total, calculate_co2_emissions(total)
+
+
+def calculate_co2_emissions(kwh):
+    """
+    Calculate CO2 emissions based on electricity consumption and emission factor.
+
+    Parameters:
+    kwh (float): Electricity consumption in kilowatt-hours.
+
+    Returns:
+    float: Total CO2 emissions in kilograms.
+    """
+    emission_factor = 0.475
+    co2_absorption_per_tree = 21
+    co2_emissions = kwh * emission_factor
+    trees_saved = co2_emissions / co2_absorption_per_tree
+
+    return {
+        "trees": trees_saved,
+        "carbonEmission": {"co2Emissions": {"amount": co2_emissions, "unit": "kgs"}},
+        "factors": {
+            "carbonAbsorption": co2_absorption_per_tree,
+            "emissionFactor": {"amount": emission_factor, "unit": "CO2/kWh"},
+        },
+    }
 
 
 if __name__ == "__main__":

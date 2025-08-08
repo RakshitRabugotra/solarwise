@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useMemo, useRef, useState } from "react"
 import {
   Card,
   CardHeader,
@@ -17,16 +17,13 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { calculateFormSchema } from "@/schema/schema"
-import { calculateAction } from "@/actions/actions"
-import { EnergyEstimation } from "@/types"
+import * as CONFIG from "@/lib/constants"
+import { twMerge } from "tailwind-merge"
+import { BaseAPIRequestBody } from "@/types"
+import useLocalStorage from "@/hooks/use-local-storage"
+import Maps from "@/constants/Maps"
 
 type FormErrors = {
   roofArea?: string[]
@@ -35,20 +32,27 @@ type FormErrors = {
   mountingSlope?: string[]
 }
 
-export default function CalculateForm({
-  setProduction,
-}: {
-  setProduction: React.Dispatch<React.SetStateAction<EnergyEstimation | null>>
-}) {
-  // Get the position of the user stored from the local-storage
-  const storedLocation = JSON.parse(
-    localStorage.getItem("user-location") || "null"
-  )
+export interface CalculateFormProps {
+  onConfigChange: (config: BaseAPIRequestBody | null) => void
+  className?: string
+}
 
-  const [position, setPosition] = useState<[number, number]>([
-    storedLocation.y,
-    storedLocation.x,
-  ])
+export default function CalculateForm({
+  onConfigChange,
+  className,
+}: CalculateFormProps) {
+  // Get the position of the user stored from the local-storage
+  const { item, isLoading, error } = useLocalStorage("user-location")
+
+  const storedLocation = useMemo(() => (item ? JSON.parse(item) : null), [item])
+
+  const position = useMemo<[number, number]>(
+    () => [
+      storedLocation?.y ?? Maps.STARTING_COORDS.lon,
+      storedLocation?.x ?? Maps.STARTING_COORDS.lat,
+    ],
+    []
+  )
 
   const [errors, setErrors] = useState<FormErrors>({})
 
@@ -65,29 +69,48 @@ export default function CalculateForm({
       setErrors(fieldErrors)
       return
     }
-
     setErrors({})
 
-    calculateAction({
+    // Set the config body
+    onConfigChange({
       area: Number(result.data.roofArea),
       technology: result.data.pvTechnology,
+      efficiency: 0.223,
       lat: position[0],
       lon: position[1],
-    }).then(result => setProduction(result ? result.payload : null))
+      to_year: CONFIG.PREDICTION_TO_YEAR,
+      costToUnit: CONFIG.COST_TO_UNIT,
+      costToInstallation: CONFIG.COST_TO_INSTALLATION,
+      adjustInflation: CONFIG.ADJUST_FOR_INSTALLATION,
+    })
+  }
+
+  if (error) {
+    throw error
+  }
+
+  if (isLoading) {
+    return null
   }
 
   return (
-    <Card className="max-w-md grow basis-1/2">
+    <Card
+      className={twMerge("rounded-none lg:max-w-md lg:rounded-sm", className)}
+    >
       <CardHeader>
-        <CardTitle className="text-2xl">Solar Savings Calculator</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-lg md:text-xl lg:text-2xl">
+          Little more?
+        </CardTitle>
+        <CardDescription className="text-sm md:text-base">
           Discover how much you can save by installing solar panels.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form action={clientAction} className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="roofArea">Roof Area</Label>
+            <Label htmlFor="roofArea" className="text-xs sm:text-sm">
+              Roof Area
+            </Label>
             <Input
               id="roofArea"
               name="roofArea"
@@ -99,7 +122,9 @@ export default function CalculateForm({
             )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="pvTechnology">PV Technology</Label>
+            <Label htmlFor="pvTechnology" className="text-xs sm:text-sm">
+              PV Technology
+            </Label>
             <Select name="pvTechnology">
               <SelectTrigger>
                 <SelectValue placeholder="Select PV technology" />
@@ -114,7 +139,7 @@ export default function CalculateForm({
               <p className="text-sm text-red-500">{errors.pvTechnology}</p>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="azimuth">
                 <TooltipProvider>
@@ -177,7 +202,7 @@ export default function CalculateForm({
                 <p className="text-sm text-red-500">{errors.mountingSlope}</p>
               )}
             </div>
-          </div>
+          </div> */}
           <Button type="submit" className="w-full">
             Calculate
           </Button>
@@ -186,7 +211,6 @@ export default function CalculateForm({
     </Card>
   )
 }
-
 
 function InfoIcon(props: any) {
   return (
@@ -208,4 +232,3 @@ function InfoIcon(props: any) {
     </svg>
   )
 }
-

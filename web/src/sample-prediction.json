@@ -1,0 +1,245 @@
+{
+  "greenFactor": {
+    "carbonEmission": {
+      "co2Emissions": {
+        "amount": 2750.6169291693886,
+        "unit": "kgs"
+      }
+    },
+    "factors": {
+      "carbonAbsorption": 21,
+      "emissionFactor": {
+        "amount": 0.475,
+        "unit": "CO2/kWh"
+      }
+    },
+    "trees": 130.98175853187564
+  },
+  "months": [
+    {
+      "energy": 208.53659320713197,
+      "month": "SEP",
+      "order": 0,
+      "peak-sunlight-hours": 4.391420374628208,
+      "radiation": 425.8948557862693,
+      "year": 2024
+    },
+    {
+      "energy": 200.95531154085944,
+      "month": "OCT",
+      "order": 1,
+      "peak-sunlight-hours": 4.087260440332602,
+      "radiation": 426.72871835697833,
+      "year": 2024
+    },
+    {
+      "energy": 182.75637901997814,
+      "month": "NOV",
+      "order": 2,
+      "peak-sunlight-hours": 3.8188970871530126,
+      "radiation": 429.2000089162479,
+      "year": 2024
+    },
+    {
+      "energy": 180.95491122119702,
+      "month": "DEC",
+      "order": 3,
+      "peak-sunlight-hours": 3.676618690374464,
+      "radiation": 427.1756387235642,
+      "year": 2024
+    },
+    {
+      "energy": 182.65489824352204,
+      "month": "JAN",
+      "order": 4,
+      "peak-sunlight-hours": 3.741636724914421,
+      "radiation": 423.6960322708802,
+      "year": 2025
+    },
+    {
+      "energy": 173.47710124531253,
+      "month": "FEB",
+      "order": 5,
+      "peak-sunlight-hours": 3.9886464140979174,
+      "radiation": 417.93137323913174,
+      "year": 2025
+    },
+    {
+      "energy": 201.42958169816814,
+      "month": "MAR",
+      "order": 6,
+      "peak-sunlight-hours": 4.274645925236479,
+      "radiation": 408.9853926584991,
+      "year": 2025
+    },
+    {
+      "energy": 213.39151937328865,
+      "month": "APR",
+      "order": 7,
+      "peak-sunlight-hours": 4.582465567241416,
+      "radiation": 417.64095283997705,
+      "year": 2025
+    },
+    {
+      "energy": 239.7415465189813,
+      "month": "MAY",
+      "order": 8,
+      "peak-sunlight-hours": 4.834174313395486,
+      "radiation": 430.43312851266074,
+      "year": 2025
+    },
+    {
+      "energy": 242.22257782882969,
+      "month": "JUN",
+      "order": 9,
+      "peak-sunlight-hours": 4.961564734461449,
+      "radiation": 437.84570340615034,
+      "year": 2025
+    },
+    {
+      "energy": 243.5026382058838,
+      "month": "JUL",
+      "order": 10,
+      "peak-sunlight-hours": 4.902375485426097,
+      "radiation": 431.1037419230137,
+      "year": 2025
+    },
+    {
+      "energy": 232.95734894824906,
+      "month": "AUG",
+      "order": 11,
+      "peak-sunlight-hours": 4.684019054368532,
+      "radiation": 431.66064546902606,
+      "year": 2025
+    },
+    {
+      "energy": 209.17652871434302,
+      "month": "SEP",
+      "order": 12,
+      "peak-sunlight-hours": 4.391420374628208,
+      "radiation": 427.2017978263432,
+      "year": 2025
+    },
+    {
+      "energy": 201.57077737086053,
+      "month": "OCT",
+      "order": 13,
+      "peak-sunlight-hours": 4.087260440332602,
+      "radiation": 428.03566039705214,
+      "year": 2025
+    },
+    {
+      "energy": 183.3128841221938,
+      "month": "NOV",
+      "order": 14,
+      "peak-sunlight-hours": 3.8188970871530126,
+      "radiation": 430.5069509563217,
+      "year": 2025
+    },
+    {
+      "energy": 181.50854199831596,
+      "month": "DEC",
+      "order": 15,
+      "peak-sunlight-hours": 3.676618690374464,
+      "radiation": 428.482580763638,
+      "year": 2025
+    },
+    {
+      "energy": 183.21831953415912,
+      "month": "JAN",
+      "order": 16,
+      "peak-sunlight-hours": 3.741636724914421,
+      "radiation": 425.0029743109541,
+      "year": 2026
+    },
+    {
+      "energy": 174.01959346084163,
+      "month": "FEB",
+      "order": 17,
+      "peak-sunlight-hours": 3.9886464140979174,
+      "radiation": 419.2383152792055,
+      "year": 2026
+    },
+    {
+      "energy": 202.0732643165732,
+      "month": "MAR",
+      "order": 18,
+      "peak-sunlight-hours": 4.274645925236479,
+      "radiation": 410.292334698573,
+      "year": 2026
+    },
+    {
+      "energy": 214.05929475730625,
+      "month": "APR",
+      "order": 19,
+      "peak-sunlight-hours": 4.582465567241416,
+      "radiation": 418.9478948800509,
+      "year": 2026
+    },
+    {
+      "energy": 240.46948376438033,
+      "month": "MAY",
+      "order": 20,
+      "peak-sunlight-hours": 4.834174313395486,
+      "radiation": 431.7400705527346,
+      "year": 2026
+    },
+    {
+      "energy": 242.94559707409542,
+      "month": "JUN",
+      "order": 21,
+      "peak-sunlight-hours": 4.961564734461449,
+      "radiation": 439.1526454462242,
+      "year": 2026
+    },
+    {
+      "energy": 244.2408452864361,
+      "month": "JUL",
+      "order": 22,
+      "peak-sunlight-hours": 4.902375485426097,
+      "radiation": 432.41068396308754,
+      "year": 2026
+    },
+    {
+      "energy": 233.66267558870246,
+      "month": "AUG",
+      "order": 23,
+      "peak-sunlight-hours": 4.684019054368532,
+      "radiation": 432.96758750909987,
+      "year": 2026
+    },
+    {
+      "energy": 209.81646422155413,
+      "month": "SEP",
+      "order": 24,
+      "peak-sunlight-hours": 4.391420374628208,
+      "radiation": 428.508739866417,
+      "year": 2026
+    },
+    {
+      "energy": 202.1862432008616,
+      "month": "OCT",
+      "order": 25,
+      "peak-sunlight-hours": 4.087260440332602,
+      "radiation": 429.342602437126,
+      "year": 2026
+    },
+    {
+      "energy": 183.86938922440942,
+      "month": "NOV",
+      "order": 26,
+      "peak-sunlight-hours": 3.8188970871530126,
+      "radiation": 431.81389299639557,
+      "year": 2026
+    },
+    {
+      "energy": 182.0621727754349,
+      "month": "DEC",
+      "order": 27,
+      "peak-sunlight-hours": 3.676618690374464,
+      "radiation": 429.78952280371186,
+      "year": 2026
+    }
+  ],
+  "total": 5790.772482461871
+}

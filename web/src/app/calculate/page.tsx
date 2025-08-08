@@ -1,9 +1,12 @@
-import SavingEstimation from "@/components/component/savings/SavingEstimation"
+import CalculateMainContent from "@/components/page/calculate/CalculateMainContent"
+import Footer from "@/components/page/home/Footer"
 
-export default function Calculator() {
+export default function CalculatePage() {
   return (
-    <section className="min-h-screen">
-      <SavingEstimation />
-    </section>
+    <main className="min-h-screen w-full">
+      {/* The main content for the calculate page */}
+      <CalculateMainContent />
+      <Footer />
+    </main>
   )
 }

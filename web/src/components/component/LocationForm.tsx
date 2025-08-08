@@ -1,14 +1,17 @@
 "use client"
 
+import "@/components/ui/form"
 import { useEffect, useState, useRef } from "react"
 import { useDebounceCallback } from "usehooks-ts"
 import { OpenStreetMapProvider } from "leaflet-geosearch"
-import { Button } from "../ui/button"
 import { SearchResult } from "leaflet-geosearch/dist/providers/provider.js"
 import { useRouter } from "next/navigation"
-import "@/components/ui/form"
+import Strings from "@/constants/Strings"
+import { cn } from "@/lib/utils"
+import Maps from "@/constants/Maps"
+import { twMerge } from "tailwind-merge"
 
-export default function LocationForm() {
+export default function LocationForm({ className }: { className?: string }) {
   const [input, setInput] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
   const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -71,7 +74,15 @@ export default function LocationForm() {
   }
 
   const handleSubmit = (index: number) => {
-    const selectedLocation = results[index >= 0 ? index : 0] // Pick the top result if nothing is selected
+    // -1 for the case when using default location
+    const selectedLocation =
+      index === -1
+        ? {
+            y: Maps.STARTING_COORDS.lat,
+            x: Maps.STARTING_COORDS.lon,
+          }
+        : results[index >= 0 ? index : 0] // Pick the top result if nothing is selected
+
     if (selectedLocation) {
       console.log("Submitted Location:", selectedLocation)
       localStorage.setItem("user-location", JSON.stringify(selectedLocation))
@@ -80,26 +91,32 @@ export default function LocationForm() {
   }
 
   return (
-    <div className="flex h-[70vh] w-full flex-col items-center bg-slate-200">
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          handleSubmit(selectedIndex)
-        }}
-      >
-        <div className="mb-2 flex items-center justify-center">
-          <input
-            type="text"
-            onChange={e => debouncedSetInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Search location"
-            className="h-full p-2 pl-4"
-          />
-          <Button type="submit" className="rounded-none">
-            Check Your Roof
-          </Button>
-        </div>
-        <ul className="md:max-w-1/2 max-h-[200px] w-full overflow-y-auto rounded border border-gray-300 bg-white shadow-lg md:mx-auto">
+    <form
+      onSubmit={e => {
+        e.preventDefault()
+        handleSubmit(selectedIndex)
+      }}
+      className={twMerge(
+        "flex w-full max-w-screen-sm flex-col items-center sm:items-start justify-center",
+        className
+      )}
+    >
+      <div className="glass flex w-screen max-w-full justify-center p-3">
+        <input
+          type="text"
+          onChange={e => debouncedSetInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={Strings.ADDRESS_BAR_PLACEHOLDER}
+          className="h-full w-full rounded-sm border-2 border-muted p-3 text-sm shadow-md sm:text-base"
+        />
+      </div>
+      <div className="relative w-full">
+        <ul
+          className={cn(
+            "max-h-[25vh] absolute top-0 z-20 w-full overflow-y-auto rounded bg-white p-3 shadow-lg",
+            results?.length === 0 && "hidden"
+          )}
+        >
           {results.map((result: SearchResult, index: number) => (
             <li
               key={index}
@@ -115,7 +132,13 @@ export default function LocationForm() {
             </li>
           ))}
         </ul>
-      </form>
-    </div>
+        <button
+          className="mt-4 absolute top-0 px-6 py-2 text-lg text-white/85 underline"
+          onClick={() => handleSubmit(-1)}
+        >
+          Or, drop a pin on the map?
+        </button>
+      </div>
+    </form>
   )
 }

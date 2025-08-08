@@ -101,8 +101,26 @@
 
 ## Error Handling
 
-All errors are handled internally within the routes, and appropriate responses are returned based on the exceptions encountered.
+The API returns the following error responses for invalid requests:
 
-## Versioning
+- **400 Bad Request**: Missing or invalid required parameters.
+  ```json
+  {
+    "code": 400,
+    "msg": "The data [lat, lon, or area] is null"
+  }
+  ```
+- **500 Internal Server Error**: No break-even point could be calculated.
+  ```json
+  {
+    "code": 500,
+    "msg": "No break even point found for the given parameters"
+  }
+  ```
 
-The API starts at version 0.0.1. No versioning system is implemented for now.
+---
+
+## Notes
+
+- The break-even year is calculated using inflation-adjusted cost values when `adjustInflation` is set to `true`.
+- For detailed monthly data, refer to the `years` field in the response payload.
