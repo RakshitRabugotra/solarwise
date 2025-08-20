@@ -13,19 +13,17 @@ import json
 
 # Downloading model from Hugging Face
 repo_id = "Subhajit42/SDL-Prediction-Model"
-# Define the local directory where you want to download the files
+
 local_dir = "app/static/sdl-prediction-model"
 
 os.makedirs(local_dir, exist_ok=True)
 num_files = sum([len(files) for r, d, files in os.walk(local_dir)])
 
-if num_files == 0:
+model_file_path = os.path.join(local_dir, "model.keras")
+if not os.path.isfile(model_file_path):
     snapshot_download(repo_id=repo_id, local_dir=local_dir)
-# print(f"Files downloaded to {local_dir}")
 
 
-# FILE_NAMES = get_model_files()
-# LOCATIONS = [(float(i.split("_")[0]), float(i.split("_")[1])) for i in FILE_NAMES]
 
 # DON'T CHANGE, START DATE
 REFERENCE_DATE = datetime(2025, 6, 1)
