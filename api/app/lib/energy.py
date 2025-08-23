@@ -201,18 +201,19 @@ def get_estimated_energy_by_year(
 
     # Redefine efficiency with a constants
     efficiency = efficiency or 0.223
-    SDLR = []
+    # SDLR = []
 
     # Retrieve for the all year
     date = datetime.datetime(to_year, 12, 31).strftime("%Y-%m-%d")
     # Get the prediction for the SDLR
-    SDLR.extend(calculate_SDL(lat, lon, date))
+    SDLR = calculate_SDL(lat, lon, date)
+    
 
     # Else, return an average energy for the whole year
     yearly_energies = []
 
     # The starting date for the prediction
-    date = datetime.datetime(2024, 9, 1)  # Start month + 1
+    date = datetime.datetime(2025, 6, 1)  # Start month + 1
 
     total = 0
     for i, radiation in enumerate(SDLR):
@@ -226,12 +227,12 @@ def get_estimated_energy_by_year(
         energy *= efficiency * date_range(date.month, date.year)
         yearly_energies.append(
             {
-                "radiation": radiation,
+                "radiation": float(radiation),
                 "order": i,
                 "year": date.year,
                 "month": get_month_abbr(date.month - 1),
-                "energy": energy,
-                "peakSunlightHours": hours * 0.6,
+                "energy": float(energy),
+                "peakSunlightHours": float(hours * 0.6),
             }
         )
         # Increment the date
@@ -260,11 +261,11 @@ def calculate_co2_emissions(kwh):
     trees_saved = co2_emissions / co2_absorption_per_tree
 
     return {
-        "trees": trees_saved,
-        "carbonEmission": {"co2Emissions": {"amount": co2_emissions, "unit": "kgs"}},
+        "trees": float(trees_saved),
+        "carbonEmission": {"co2Emissions": {"amount": float(co2_emissions), "unit": "kgs"}},
         "factors": {
-            "carbonAbsorption": co2_absorption_per_tree,
-            "emissionFactor": {"amount": emission_factor, "unit": "CO2/kWh"},
+            "carbonAbsorption": float(co2_absorption_per_tree),
+            "emissionFactor": {"amount": float(emission_factor), "unit": "CO2/kWh"},
         },
     }
 

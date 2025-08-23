@@ -19,6 +19,9 @@
 **\docs\_build
 **\.vscode
 
+# model
+**\app\static\sdl-prediction-model
+
 # instance
 **\instance
 
