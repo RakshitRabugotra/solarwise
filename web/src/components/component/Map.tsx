@@ -36,9 +36,7 @@ export interface MapProps {
   className?: string
 }
 
-export default function Map({
-  className
-} : MapProps) {
+export default function Map({ className }: MapProps) {
   const storedLocation = JSON.parse(
     localStorage.getItem("user-location") || "null"
   )
@@ -61,7 +59,7 @@ export default function Map({
       })
     )
     // Update the current state
-    setPosition([longitude, latitude])
+    setPosition([latitude, longitude])
   }
 
   const handleError = (error: GeolocationPositionError) => {
@@ -78,7 +76,12 @@ export default function Map({
 
   return (
     <div className={twMerge("relative h-full", className)}>
-      <MapContainer center={position} zoom={15} scrollWheelZoom={false} className="!w-full !h-full" >
+      <MapContainer
+        center={position}
+        zoom={15}
+        scrollWheelZoom={false}
+        className="!h-full !w-full"
+      >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -91,7 +94,7 @@ export default function Map({
       <Button
         size="sm"
         onClick={handleLocationClick}
-        className="absolute top-5 lg:top-auto lg:bottom-5 lg:right-5 right-2 aspect-square lg:aspect-auto z-50 space-x-2 py-2"
+        className="absolute right-2 top-5 z-50 aspect-square space-x-2 py-2 lg:bottom-5 lg:right-5 lg:top-auto lg:aspect-auto"
       >
         <LocateFixed />
         <p className="hidden lg:inline-block">Use Current Location</p>
